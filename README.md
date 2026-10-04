@@ -1,120 +1,53 @@
-# Childhood Obesity, Adult Depression, and Systemic Inflammation
+# Childhood obesity and adult depression
 
-A reproducible **R learning prototype** for the research question:
+This is a small R practice project I made while trying to understand a possible research topic about **childhood obesity, adult depression and systemic inflammation**.
 
-> Is childhood obesity associated with adult depression, and could systemic inflammation statistically mediate part of that association?
+All data in this repository are simulated. There is no real patient data here.
 
-> **Important:** This repository uses **synthetic data only**. It contains no real patient information and no identifiable clinical data. The results are for learning and workflow demonstration only.
+## What I have done so far
 
-## Conceptual framework
+- generated a simple synthetic dataset
+- made a basic Table 1
+- used chi-square tests for categorical variables
+- used t tests / Wilcoxon tests for continuous variables
+- tried logistic regression and learned how to read OR, 95% CI and P values
+- calculated several inflammation indices: NLR, SII and SIRI
 
-```mermaid
-flowchart LR
-    A[Childhood obesity] --> B[Systemic inflammation]
-    B --> C[Adult depression]
-    A --> C
-```
+The main question I am thinking about is:
 
-## Main variables
+`childhood obesity -> systemic inflammation -> adult depression`
 
-- Exposure: childhood obesity
-- Outcome: adult depression
-- Candidate mediators: NLR, SII, SIRI
-- Covariates: age, sex, smoking, drinking, physical activity, socioeconomic status
-- Sensitivity variable: adult BMI
+At this stage I am mainly using the project to learn the analysis workflow before seeing the real dataset.
 
-Inflammation indices:
+## Files
 
-- `NLR = neutrophils / lymphocytes`
-- `SII = platelets × neutrophils / lymphocytes`
-- `SIRI = neutrophils × monocytes / lymphocytes`
+- `R/01_generate_data.R` — generate simulated data
+- `R/02_table1.R` — basic descriptive statistics and group comparison
+- `R/03_logistic_regression.R` — crude and adjusted logistic regression
+- `R/04_inflammation.R` — a first attempt at analysing inflammation indices
+- `R/05_mediation_demo.R` — draft only; I have not decided on the final mediation model
+- `notes.md` — things I have learned and questions I still need to discuss
 
-## Project structure
+## Run
 
-```text
-.
-├─ README.md
-├─ run_all.R
-├─ .gitignore
-├─ R/
-│  ├─ 01_generate_data.R
-│  ├─ 02_table1.R
-│  ├─ 03_logistic_regression.R
-│  ├─ 04_inflammation.R
-│  └─ 05_mediation_demo.R
-├─ data/
-├─ results/
-└─ figures/
-```
-
-## Analysis workflow
-
-### 1. Generate synthetic data
-`R/01_generate_data.R`
-
-Creates a simulated cohort with obesity history, CBC-derived inflammation indices, adult BMI, PHQ-9 score, and a binary adult-depression outcome.
-
-### 2. Table 1
-`R/02_table1.R`
-
-- Categorical variables: chi-square test
-- Approximately normal continuous variables: Welch t-test
-- Skewed inflammation indices: Wilcoxon rank-sum test
-
-### 3. Logistic regression
-`R/03_logistic_regression.R`
-
-Estimates crude and adjusted odds ratios for:
-
-`childhood obesity -> adult depression`
-
-Adult BMI is added in a separate sensitivity model because it may lie on the pathway between childhood obesity and later inflammation/depression.
-
-### 4. Inflammation analysis
-`R/04_inflammation.R`
-
-Examines whether childhood obesity is associated with NLR, SII, and SIRI.
-
-### 5. Mediation demo
-`R/05_mediation_demo.R`
-
-Demonstrates:
-
-`childhood obesity -> log(SII) -> adult depression`
-
-using the R package `mediation`.
-
-A mediation model alone does **not** prove a causal biological mechanism. Causal interpretation requires appropriate temporality, confounder control, model specification, and assumptions about unmeasured confounding.
-
-## Quick start
-
-Clone/download the repository, open it in RStudio, set the repository root as the working directory, then run:
+From the repository folder in RStudio:
 
 ```r
-source("run_all.R")
+source("R/01_generate_data.R")
+source("R/02_table1.R")
+source("R/03_logistic_regression.R")
 ```
 
-For the mediation example:
+## Things I still need to figure out
 
-```r
-install.packages("mediation")  # first time only
-source("R/05_mediation_demo.R")
-```
+The real analysis depends on the actual database and study design. I still need to confirm:
 
-## Before using real data
+- how childhood obesity is defined
+- how adult depression is measured
+- when the inflammation markers were measured
+- which confounders should be adjusted for
+- whether adult BMI should be in the main model
+- whether the database needs survey weights or other special handling
+- how the mediation analysis should be specified
 
-The real study protocol should define:
-
-- how childhood obesity is measured and at what age
-- whether childhood BMI is measured prospectively or recalled
-- how adult depression is defined
-- timing of inflammatory biomarker measurements
-- missing-data handling
-- survey weights/clustering/stratification if relevant
-- confounder selection based on subject-matter knowledge and a DAG
-- the role of adult BMI
-- subgroup and sensitivity analyses
-
-## Current status
-
-This is a **pre-analysis learning prototype** designed to show understanding of the study question, data structure, statistical workflow, and reproducible R analysis before access to the real dataset.
+So this repository is still a learning draft and will change after I understand the real data better.
