@@ -1,39 +1,20 @@
 # 05_mediation_demo.R
-# Statistical mediation demo: childhood obesity -> log(SII) -> adult depression
-# Causal interpretation requires strong assumptions and appropriate temporality.
-
-dat <- read.csv("data/synthetic_data.csv")
-dat$log_SII <- log(dat$SII)
-
-if (!requireNamespace("mediation", quietly=TRUE)) {
-  stop("Install package first: install.packages('mediation')")
-}
-
-m_model <- lm(
-  log_SII ~ childhood_obesity + age + female +
-    smoking + drinking + physical_activity + ses_z,
-  data=dat
-)
-
-y_model <- glm(
-  adult_depression ~ childhood_obesity + log_SII + age + female +
-    smoking + drinking + physical_activity + ses_z,
-  data=dat, family=binomial()
-)
-
-set.seed(20261004)
-med_fit <- mediation::mediate(
-  model.m=m_model,
-  model.y=y_model,
-  treat="childhood_obesity",
-  mediator="log_SII",
-  boot=TRUE,
-  sims=1000
-)
-
-print(summary(med_fit))
-
-dir.create("results", showWarnings = FALSE)
-sink("results/mediation_summary.txt")
-print(summary(med_fit))
-sink()
+#
+# Draft notes for later.
+#
+# Possible idea:
+# childhood obesity -> systemic inflammation -> adult depression
+#
+# I am keeping this file as a placeholder because I still need to know:
+# 1. the timing of childhood obesity, inflammation measurement and depression;
+# 2. the actual variables available in the database;
+# 3. which confounders the research team plans to adjust for;
+# 4. whether adult BMI is part of the pathway;
+# 5. which inflammation marker should be the main mediator.
+#
+# After these questions are clear, I can build the mediator model and
+# outcome model with the real study design in mind.
+#
+# Possible R package to learn later:
+# install.packages("mediation")
+# library(mediation)
